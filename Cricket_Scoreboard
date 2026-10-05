@@ -1,0 +1,428 @@
+#Gully Cricket Score Board
+print('''CRICKET
+Please follow the instructions given properly''')
+print("--------------------------------------------------------------------------------------")
+total_overs=int(input("Enter the no. of overs: "))
+print("--------------------------------------------------------------------------------------")
+print("Enter the teams names:")
+while True:
+    team1=input("Team1: ")
+    if  team1=="" or team1.isdigit():
+        print("Invalid, Enter a Name")
+    else:
+        break
+while True:
+    team2=input("Team2: ")
+    if  team2=="" or team2.isdigit():
+        print("Invalid, Enter a Name")
+    elif team2==team1:
+        print("Both teams cannot have the same name")
+    else:
+        break
+print("--------------------------------------------------------------------------------------")
+print("Who won Toss?")
+while True:
+    toss=input(f"{team1} or {team2}: ")    
+    if toss!=team1 and toss!=team2:
+        print('''Invalid Choice
+Try Again''')
+    else:
+        break
+print("--------------------------------------------------------------------------------------")
+choice={"ba":"Batting","bo":"Bowling"}
+while True:
+    choose=input(f"{toss} chooses Bat or Bowl(ba or bo): ")  
+    if choose!="ba" and choose!="bo":
+        print('''Invalid Choice
+Try Again''')
+    else:
+        break
+if toss == team1:
+    if choose == "ba":
+        bat1 = team1
+        bat2 = team2
+    else:
+        bat1 = team2
+        bat2 = team1
+else:  
+    if choose == "ba":
+        bat1 = team2
+        bat2 = team1
+    else:
+        bat1 = team1
+        bat2 = team2
+#First innings
+print("--------------------------------------------------------------------------------------")
+print()
+print("\tMATCH BEGINS")
+print()
+print('''Welcome!
+Lets Play HAND CRICKET
+Rules:
+1)Follow the instructions given properly
+2)Runs are only allowed ranging 1-4, and 6
+3)Make sure u enjoy the game!''')
+print("--------------------------------------------------------------------------------------")
+print(toss,"Won Toss and chose",choice[choose])
+print()
+print("FIRST INNINGS")
+print("First Batting is",bat1)
+team_runs=0
+ext_runs=0
+wickets=0
+batsman={}
+bowler={}
+print("--------------------------------------------------------------------------------------")
+while True:
+    on_str=input("First on strike: ")
+    if on_str.isdigit() or on_str=="":
+        print("Invalid, Enter a Name")
+    else:
+        batsman[on_str]=(0,0)
+        break
+while True:
+    off_str=input("First off strike: ")
+    if off_str.isdigit() or off_str=="":
+        print("Invalid, Enter a Name")
+    if off_str in batsman:
+        print('''This person is not acepted
+Try again''')
+    else:
+        batsman[off_str]=(0,0)
+        break
+print("--------------------------------------------------------------------------------------")
+print("Follow these input key words to enter runs")
+print('''#Dot ball - 0
+# 1 run - 1
+# 2 runs - 2
+# 3 runs - 3
+# 4 runs - 4
+# 6 runs - 6
+# Wide - wd
+# Wicket - w
+# Noball - n''')
+print("--------------------------------------------------------------------------------------")
+for overs in range(1,total_overs+1):
+    if wickets==10:
+        print("All Out!")
+        break
+    print(f"Over {overs}")
+    while True:
+        bowl=input("Bowler is: ")
+        if bowl.isdigit() or bowl=="":
+            print("Invalid, Enter a Name")
+        else:
+            break
+    if bowl not in bowler:
+        bowler[bowl]=(0,0,0)
+    w,r,o=bowler[bowl]
+    bowler[bowl]=w,r,o+1
+    thisover=()
+    balls=1
+    print("--------------------------------------------------------------------------------------")
+    free_hit = False
+    while balls<7:
+        while True:
+            try:
+                run=input(f"Ball {balls}: ")    
+                if run not in ["0","1","2","3","4","6","wd","w","n"]:
+                    print('''Invalid Choice
+Try Again''')
+                else:
+                    break
+            except:
+                print('''Invalid Choice
+Try Again''')
+        if run=="0":
+            free_hit=False
+            balls+=1
+            r,b=batsman[on_str]
+            batsman[on_str]=r,b+1
+            thisover+=(run,)
+        elif run=="1" or run=="3":
+            free_hit = False
+            r,b=batsman[on_str]
+            batsman[on_str]=r+int(run),b+1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+int(run),o
+            on_str,off_str=off_str,on_str
+            balls+=1
+            team_runs+=int(run)
+            thisover+=(run,)
+        elif run=="2" or run=="4" or run=="6":
+            free_hit = False
+            r,b=batsman[on_str]
+            batsman[on_str]=r+int(run),b+1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+int(run),o
+            balls+=1
+            team_runs+=int(run)
+            thisover+=(run,)
+        elif run=="wd":
+            free_hit = False
+            ext_runs+=1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+1,o
+            thisover+=(run,)
+        elif run=="w":
+            balls+=1
+            r,b=batsman[on_str]
+            batsman[on_str]=r,b+1
+            w,r,o=bowler[bowl]
+            if free_hit:
+                print("Wicket on a Free Hit! No wicket counted.")
+                free_hit = False
+            else:
+                wickets+=1
+                thisover+=(run,)
+                bowler[bowl]=w+1,r,o
+                if wickets==10:
+                    break
+                while True:
+                    try:
+                        wi=int(input(f"Who is out {on_str} or {off_str}? (1 or 2): "))    
+                        if wi!=1 and wi!=2:
+                            print('''Invalid Choice
+Try Again''')
+                        else:
+                            break
+                    except:
+                        print('''Invalid Choice
+Try Again''')
+                if wi==1:
+                    print(on_str,"Out!")
+                    while True:
+                        on_str=input("Next batsman: ")
+                        if on_str in batsman:
+                            print('''This person is not acepted
+Try again''')
+                        elif  on_str.isdigit() or on_str=="":
+                            print("Invalid, Enter a Name")
+                        else:
+                            break
+                    batsman[on_str]=(0,0)
+                else:
+                    print(off_str,"Out!")
+                    while True:
+                        off_str=input("Next batsman: ")
+                        if off_str in batsman:
+                            print('''This person is not acepted
+Try again''')
+                        if on_str.isdigit() or on_str=="":
+                            print("Invalid, Enter a Name")
+                        else:
+                            break
+                    batsman[off_str]=(0,0)
+        else:
+            free_hit = True
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+1,o
+            print("Noball Free hit!")
+            ext_runs+=1
+            thisover+=(run,)
+    print("--------------------------------------------------------------------------------------")
+    print(f"Over {overs} - | ",end="")
+    for i in thisover:
+        print(i,end=" | ")
+    print()
+    print("Score: ",team_runs+ext_runs,"/",wickets)
+    on_str,off_str=off_str,on_str
+    print("--------------------------------------------------------------------------------------")
+target=team_runs+ext_runs+1
+print(bat1,"scored",target-1,"runs")
+print("Team runs=",team_runs,"|","Extra runs=",ext_runs)
+print(bat2,"need to chase",target,"runs to win")
+print("--------------------------------------------------------------------------------------")
+print("Batsman - runs/balls")
+for i in batsman:
+    print(i,"-",batsman[i][0],"/",batsman[i][1])
+print("--------------------------------------------------------------------------------------")
+print("Bowler - wickets/runs/overs")
+for i in bowler:
+    print(i,"-",bowler[i][0],"/",bowler[i][1],"/",bowler[i][2])
+print("--------------------------------------------------------------------------------------")
+#SECOND INNINGS
+print()
+print("SECOND INNINGS")
+print("Second Batting is",bat2)
+team_runs=0
+ext_runs=0
+wickets=0
+batsman={}
+bowler={}
+print("--------------------------------------------------------------------------------------")
+while True:
+    on_str=input("First on strike: ")
+    if on_str.isdigit() or on_str=="":
+        print("Invalid, Enter a Name")
+    else:
+        break
+while True:
+    off_str=input("First off strike: ")
+    if off_str.isdigit() or off_str=="":
+        print("Invalid, Enter a Name")
+    else:
+        break
+batsman[on_str]=(0,0)
+batsman[off_str]=(0,0)
+print("--------------------------------------------------------------------------------------")
+print("Follow these input key words to enter runs")
+print('''#Dot ball - 0
+# 1 run - 1
+# 2 runs - 2
+# 3 runs - 3
+# 4 runs - 4
+# 6 runs - 6
+# Wide - wd
+# Wicket - w
+# Noball - n''')
+print("--------------------------------------------------------------------------------------")
+for overs in range(1,total_overs+1):
+    if (team_runs+ext_runs)>=target:
+        break
+    if wickets==10:
+        print("All Out!")
+        break
+    print(f"Over {overs}")
+    while True:
+        bowl=input("Bowler is: ")
+        if bowl.isdigit() or bowl=="":
+            print("Invalid, Enter a Name")
+        else:
+            break
+    if bowl not in bowler:
+        bowler[bowl]=(0,0,0)
+    w,r,o=bowler[bowl]
+    bowler[bowl]=w,r,o+1
+    thisover=()
+    balls=0
+    print("--------------------------------------------------------------------------------------")
+    free_hit = False
+    while balls<6:
+        while True:
+            try:
+                run=input(f"Ball {balls+1}: ")    
+                if run not in ["0","1","2","3","4","6","wd","w","n"]:
+                    print('''Invalid Choice
+Try Again''')
+                else:
+                    break
+            except:
+                print('''Invalid Choice
+Try Again''')
+        if run=="0":
+            free_hit=False
+            balls+=1
+            r,b=batsman[on_str]
+            batsman[on_str]=r,b+1
+            thisover+=(run,)
+        elif run=="1" or run=="3":
+            free_hit = False
+            r,b=batsman[on_str]
+            batsman[on_str]=r+int(run),b+1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+int(run),o
+            on_str,off_str=off_str,on_str
+            balls+=1
+            team_runs+=int(run)
+            thisover+=(run,)
+        elif run=="2" or run=="4" or run=="6":
+            free_hit = False
+            r,b=batsman[on_str]
+            batsman[on_str]=r+int(run),b+1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+int(run),o
+            balls+=1
+            team_runs+=int(run)
+            thisover+=(run,)
+        elif run=="wd":
+            free_hit = False
+            ext_runs+=1
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+1,o
+            thisover+=(run,)
+        elif run=="w":
+            balls+=1
+            r,b=batsman[on_str]
+            batsman[on_str]=r,b+1
+            w,r,o=bowler[bowl]
+            if free_hit:
+                print("Wicket on a Free Hit! No wicket counted.")
+                free_hit = False
+            else:
+                wickets+=1
+                thisover+=(run,)
+                bowler[bowl]=w+1,r,o
+                if wickets==10:
+                    break
+                while True:
+                    try:
+                        wi=int(input(f"Who is out {on_str} or {off_str}? (1 or 2): "))    
+                        if wi!=1 and wi!=2:
+                            print('''Invalid Choice
+Try Again''')
+                        else:
+                            break
+                    except:
+                        print('''Invalid Choice
+Try Again''')
+                if wi==1:
+                    print(on_str,"Out!")
+                    if (total_overs * 6-((overs - 1) * 6 + balls))!=0:
+                        while True:
+                            on_str=input("Next batsman: ")
+                            if on_str in batsman:
+                                print('''This person is not acepted
+    Try again''')
+                            elif on_str.isdigit() or on_str=="":
+                                print("Invalid, Enter a Name")
+                            else:
+                                break
+                        batsman[on_str]=(0,0)
+                    else:
+                        print(off_str,"Out!")
+                        while True:
+                            off_str=input("Next batsman: ")
+                            if off_str in batsman:
+                                print('''This person is not acepted
+    Try again''')
+                            elif on_str.isdigit() or on_str=="":
+                                print("Invalid, Enter a Name")
+                            else:
+                                break
+                        batsman[off_str]=(0,0)
+        else:
+            free_hit = True
+            w,r,o=bowler[bowl]
+            bowler[bowl]=w,r+1,o
+            print("Noball Free hit!")
+            ext_runs+=1
+            thisover+=(run,)
+        if (team_runs+ext_runs)>=target:
+            break
+    print("--------------------------------------------------------------------------------------")
+    print(f"Over {overs} - | ",end="")
+    for i in thisover:
+        print(i,end=" | ")
+    print()
+    print("Score: ",team_runs+ext_runs,"/",wickets)
+    if (team_runs+ext_runs)<target or total_overs* 6-((overs - 1) * 6 + balls)!=0:
+        print(bat2,"needs",target-(team_runs+ext_runs),"runs in",total_overs * 6-((overs - 1) * 6 + balls),"balls")
+    on_str,off_str=off_str,on_str
+    print("--------------------------------------------------------------------------------------")
+if (team_runs+ext_runs)>=target:
+    print(bat2,"WON THE MATCH")
+    print("Team runs=",team_runs,"|","Extra runs=",ext_runs)
+elif (team_runs+ext_runs)<target:
+    print(bat1,"WON THE MATCH")
+    print("by",target-(team_runs+ext_runs))
+print("--------------------------------------------------------------------------------------")
+print("Batsman - runs/balls")
+for i in batsman:
+    print(i,"-",batsman[i][0],"/",batsman[i][1])
+print("--------------------------------------------------------------------------------------")
+print("Bowler - wickets/runs/overs")
+for i in bowler:
+    print(i,"-",bowler[i][0],"/",bowler[i][1],"/",bowler[i][2])
+print("--------------------------------------------------------------------------------------")
+
